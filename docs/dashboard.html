@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>quantum-finance dashboard</title>
+<style>
+  :root { --bg:#fff; --fg:#1d1d1f; --muted:#6e6e73; --card:#f5f5f7; --qae:#0a7ea4; --mc:#c2410c; --grid:#d9d9de; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111; --fg:#f2f2f2; --muted:#9a9aa0; --card:#1c1c1e; --grid:#333; --qae:#4fc3e8; --mc:#ff9a5c; } }
+  body { font: 15px/1.5 system-ui, sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 32px; }
+  h1 { margin: 0 0 4px; font-size: 26px; } h2 { font-size: 18px; margin: 0 0 12px; }
+  .sub { color: var(--muted); margin-bottom: 24px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .kpi, .card { background: var(--card); border-radius: 12px; padding: 16px 18px; }
+  .kpi .v { font-size: 24px; font-weight: 600; } .kpi .l { color: var(--muted); font-size: 13px; }
+  .grid2 { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+  @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+  .card { margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 500; }
+  .chart { width: 100%; height: auto; }
+  .grid { stroke: var(--grid); stroke-width: 1; } .axis { fill: var(--muted); font-size: 11px; }
+  .qae { stroke: var(--qae); stroke-width: 2.2; } .qae-dot { fill: var(--qae); }
+  .mc { stroke: var(--mc); stroke-width: 2.2; } .mc-dot { fill: var(--mc); }
+  .legend-bg { fill: var(--bg); stroke: var(--grid); }
+  .chip { display: inline-block; background: var(--bg); border: 1px solid var(--grid); border-radius: 999px; padding: 4px 10px; margin: 3px; font-size: 13px; color: var(--muted); }
+  .chip.sel { border-color: var(--qae); color: var(--fg); font-weight: 600; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h1>quantum-finance</h1>
+<div class="sub">Quantum amplitude estimation for option pricing · QUBO portfolio selection. Generated from live library runs by <code>scripts/build_dashboard.py</code>.</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">9.1218</div><div class="l">Black-Scholes reference price</div></div>
+  <div class="kpi"><div class="v">9.1184</div><div class="l">QAE price, m=14 (16,383 oracle calls)</div></div>
+  <div class="kpi"><div class="v">0.0034</div><div class="l">QAE |error| at m=14</div></div>
+  <div class="kpi"><div class="v">0.0946</div><div class="l">Mean MC |error| with the same 16,383 samples</div></div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <h2>Error vs. cost</h2>
+    <svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" class="chart">
+<line x1="60" x2="620" y1="295.0" y2="295.0" class="grid"/>
+<text x="52" y="299.0" class="axis" text-anchor="end">1e-3</text>
+<line x1="60" x2="620" y1="226.2" y2="226.2" class="grid"/>
+<text x="52" y="230.2" class="axis" text-anchor="end">1e-2</text>
+<line x1="60" x2="620" y1="157.5" y2="157.5" class="grid"/>
+<text x="52" y="161.5" class="axis" text-anchor="end">1e-1</text>
+<line x1="60" x2="620" y1="88.8" y2="88.8" class="grid"/>
+<text x="52" y="92.8" class="axis" text-anchor="end">1e0</text>
+<line x1="60" x2="620" y1="20.0" y2="20.0" class="grid"/>
+<text x="52" y="24.0" class="axis" text-anchor="end">1e1</text>
+<text x="60.0" y="311" class="axis" text-anchor="middle">7</text>
+<text x="115.0" y="311" class="axis" text-anchor="middle">15</text>
+<text x="167.4" y="311" class="axis" text-anchor="middle">31</text>
+<text x="218.6" y="311" class="axis" text-anchor="middle">63</text>
+<text x="269.2" y="311" class="axis" text-anchor="middle">127</text>
+<text x="319.5" y="311" class="axis" text-anchor="middle">255</text>
+<text x="369.7" y="311" class="axis" text-anchor="middle">511</text>
+<text x="419.8" y="311" class="axis" text-anchor="middle">1023</text>
+<text x="469.9" y="311" class="axis" text-anchor="middle">2047</text>
+<text x="519.9" y="311" class="axis" text-anchor="middle">4095</text>
+<text x="570.0" y="311" class="axis" text-anchor="middle">8191</text>
+<text x="620.0" y="311" class="axis" text-anchor="middle">16383</text>
+<text x="320" y="334" class="axis" text-anchor="middle">oracle calls / payoff samples (log scale)</text>
+<text x="14" y="170" class="axis" transform="rotate(-90 14 170)" text-anchor="middle">|price error| (log scale)</text>
+<polyline points="60.0,43.5 115.0,56.0 167.4,63.9 218.6,73.6 269.2,84.0 319.5,91.1 369.7,103.4 419.8,115.1 469.9,128.2 519.9,135.4 570.0,148.2 620.0,159.2" class="mc" fill="none"/>
+<circle cx="60.0" cy="43.5" r="3.5" class="mc-dot"/>
+<circle cx="115.0" cy="56.0" r="3.5" class="mc-dot"/>
+<circle cx="167.4" cy="63.9" r="3.5" class="mc-dot"/>
+<circle cx="218.6" cy="73.6" r="3.5" class="mc-dot"/>
+<circle cx="269.2" cy="84.0" r="3.5" class="mc-dot"/>
+<circle cx="319.5" cy="91.1" r="3.5" class="mc-dot"/>
+<circle cx="369.7" cy="103.4" r="3.5" class="mc-dot"/>
+<circle cx="419.8" cy="115.1" r="3.5" class="mc-dot"/>
+<circle cx="469.9" cy="128.2" r="3.5" class="mc-dot"/>
+<circle cx="519.9" cy="135.4" r="3.5" class="mc-dot"/>
+<circle cx="570.0" cy="148.2" r="3.5" class="mc-dot"/>
+<circle cx="620.0" cy="159.2" r="3.5" class="mc-dot"/>
+<polyline points="60.0,25.5 115.0,43.3 167.4,91.4 218.6,91.4 269.2,101.7 319.5,152.5 369.7,152.5 419.8,165.6 469.9,204.3 519.9,195.8 570.0,258.1 620.0,258.1" class="qae" fill="none"/>
+<circle cx="60.0" cy="25.5" r="3.5" class="qae-dot"/>
+<circle cx="115.0" cy="43.3" r="3.5" class="qae-dot"/>
+<circle cx="167.4" cy="91.4" r="3.5" class="qae-dot"/>
+<circle cx="218.6" cy="91.4" r="3.5" class="qae-dot"/>
+<circle cx="269.2" cy="101.7" r="3.5" class="qae-dot"/>
+<circle cx="319.5" cy="152.5" r="3.5" class="qae-dot"/>
+<circle cx="369.7" cy="152.5" r="3.5" class="qae-dot"/>
+<circle cx="419.8" cy="165.6" r="3.5" class="qae-dot"/>
+<circle cx="469.9" cy="204.3" r="3.5" class="qae-dot"/>
+<circle cx="519.9" cy="195.8" r="3.5" class="qae-dot"/>
+<circle cx="570.0" cy="258.1" r="3.5" class="qae-dot"/>
+<circle cx="620.0" cy="258.1" r="3.5" class="qae-dot"/>
+<g transform="translate(470,24)"><rect width="150" height="44" class="legend-bg"/><circle cx="12" cy="14" r="4" class="qae-dot"/><text x="24" y="18" class="axis">QAE error</text><circle cx="12" cy="32" r="4" class="mc-dot"/><text x="24" y="36" class="axis">Monte Carlo (mean of 50)</text></g>
+</svg>
+    <div class="note">QAE error falls roughly as 1/M (oracle calls). Monte Carlo error falls roughly as 1/√N. Monte Carlo values are averaged over 50 seeds; the QAE curve is a single exact run.</div>
+  </div>
+  <div class="card">
+    <h2>Portfolio selection (12 assets, choose 4)</h2>
+    <div><span class='chip sel'>asset 0 · μ 0.083 · σ 0.118</span>
+<span class='chip sel'>asset 1 · μ 0.110 · σ 0.149</span>
+<span class='chip'>asset 2 · μ 0.098 · σ 0.166</span>
+<span class='chip'>asset 3 · μ 0.043 · σ 0.249</span>
+<span class='chip'>asset 4 · μ 0.050 · σ 0.230</span>
+<span class='chip sel'>asset 5 · μ 0.107 · σ 0.172</span>
+<span class='chip'>asset 6 · μ 0.021 · σ 0.135</span>
+<span class='chip'>asset 7 · μ 0.102 · σ 0.284</span>
+<span class='chip sel'>asset 8 · μ 0.100 · σ 0.128</span>
+<span class='chip'>asset 9 · μ 0.067 · σ 0.179</span>
+<span class='chip'>asset 10 · μ 0.050 · σ 0.171</span>
+<span class='chip'>asset 11 · μ 0.048 · σ 0.174</span></div>
+    <table style="margin-top:12px">
+      <tr><th>Solver</th><th>Assets</th><th>Return</th><th>Variance</th><th>Objective</th><th>Feasible</th></tr>
+      <tr><td>Exhaustive</td><td>0, 1, 5, 8</td><td>0.3993</td><td>0.06687</td><td>-0.33242</td><td>yes</td></tr>
+<tr><td>Annealing</td><td>0, 1, 5, 8</td><td>0.3993</td><td>0.06687</td><td>-0.33242</td><td>yes</td></tr>
+    </table>
+    <div class="note">QUBO penalty = 3.864. Annealing reaches the exhaustive optimum on this instance.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Convergence table</h2>
+  <table>
+    <tr><th>m (qubits)</th><th>Oracle calls</th><th>QAE price</th><th>QAE |error|</th><th>MC mean |error|</th></tr>
+    <tr><td>3</td><td>7</td><td>17.4441</td><td>8.3223</td><td>4.5464</td></tr>
+<tr><td>4</td><td>15</td><td>4.5336</td><td>4.5882</td><td>2.9938</td></tr>
+<tr><td>5</td><td>31</td><td>10.0373</td><td>0.9155</td><td>2.2966</td></tr>
+<tr><td>6</td><td>63</td><td>10.0373</td><td>0.9155</td><td>1.6622</td></tr>
+<tr><td>7</td><td>127</td><td>8.4734</td><td>0.6484</td><td>1.1743</td></tr>
+<tr><td>8</td><td>255</td><td>9.2402</td><td>0.1184</td><td>0.9236</td></tr>
+<tr><td>9</td><td>511</td><td>9.2402</td><td>0.1184</td><td>0.6118</td></tr>
+<tr><td>10</td><td>1,023</td><td>9.0456</td><td>0.0762</td><td>0.4139</td></tr>
+<tr><td>11</td><td>2,047</td><td>9.1427</td><td>0.0209</td><td>0.2666</td></tr>
+<tr><td>12</td><td>4,095</td><td>9.0941</td><td>0.0277</td><td>0.2099</td></tr>
+<tr><td>13</td><td>8,191</td><td>9.1184</td><td>0.0034</td><td>0.1368</td></tr>
+<tr><td>14</td><td>16,383</td><td>9.1184</td><td>0.0034</td><td>0.0946</td></tr>
+  </table>
+  <div class="note">Call option: S₀ = 100, K = 105, r = 3%, σ = 25%, T = 1, grid of 2^10 nodes. QAE is simulated exactly; loading and comparator costs are not modelled.</div>
+</div>
+</body>
+</html>

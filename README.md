@@ -7,6 +7,14 @@ It covers two problems where quantum methods are most often proposed:
 1. **European option pricing with quantum amplitude estimation (QAE).** A statevector-level simulation of QAE, compared against Black-Scholes and Monte Carlo at equal payoff-evaluation budgets.
 2. **Cardinality-constrained portfolio selection as a QUBO.** The mean-variance problem encoded as a binary quadratic model, the input format used by quantum annealers and QAOA, solved classically as a reference.
 
+## Dashboard
+
+[`docs/dashboard.html`](docs/dashboard.html) is a self-contained page with the convergence chart, portfolio results, and tables. Regenerate it with:
+
+```bash
+PYTHONPATH=src python scripts/build_dashboard.py
+```
+
 ## Quick start
 
 ```bash
